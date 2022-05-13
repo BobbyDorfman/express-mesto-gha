@@ -3,22 +3,32 @@ const User = require('../models/user');
 // eslint-disable-next-line arrow-body-style
 const getUsers = (req, res) => {
   return User.find({})
-    .then((users) => res.status(200).send(users))
+    .then((users) => res.status(200).send({ data: users }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 const getUser = (req, res) => {
   const { id } = req.params;
   return User.findById(id)
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(200).send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+      }
+    })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res /* next */) => {
   const { name, about, avatar } = req.body;
 
   return User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ data: user }))
+    /* .catch((err) => {
+      if (err.name === 'CastError2') {
+        res.status(400).send({ message: 'Переданы некорректные данные создания пользователя' });
+      }
+    }) */
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
