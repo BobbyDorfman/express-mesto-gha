@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const User = require('../models/user');
 const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../utils/errors');
 
@@ -41,13 +42,13 @@ const createUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { name, about } = req.body;
+  const { name = req.params.name, about = req.params.about } = req.body;
 
-  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
       throw new Error('NotFound');
     })
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(200).send({ name: user.name, about: user.about }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при обновлении профиля' });
