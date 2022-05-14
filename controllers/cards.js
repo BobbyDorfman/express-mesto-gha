@@ -22,6 +22,9 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => Cards.findByIdAndRemove(req.params.id)
+  .orFail(() => {
+    throw new Error('NotFound');
+  })
   .then((cards) => res.status(200).send(cards))
   .catch((err) => {
     if (err.name === 'CastError') {
@@ -38,6 +41,9 @@ const likeCard = (req, res) => Cards.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
   { new: true },
 )
+  .orFail(() => {
+    throw new Error('NotFound');
+  })
   .then((card) => res.status(200).send(card))
   .catch((err) => {
     if (err.name === 'CastError') {
@@ -54,6 +60,9 @@ const dislikeCard = (req, res) => Cards.findByIdAndUpdate(
   { $pull: { likes: req.user._id } }, // убрать _id из массива
   { new: true },
 )
+  .orFail(() => {
+    throw new Error('NotFound');
+  })
   .then((card) => res.status(200).send(card))
   .catch((err) => {
     if (err.name === 'CastError') {
