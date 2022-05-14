@@ -1,4 +1,3 @@
-/* eslint-disable */
 // models/card.js
 const mongoose = require('mongoose');
 
