@@ -1,4 +1,5 @@
-/* eslint-disable max-len */
+// eslint-disable-next-line import/no-unresolved
+const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const User = require('../models/user');
 const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../utils/errors');
 
@@ -28,13 +29,25 @@ const getUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  return User.create({ name, about, avatar })
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'переданы некорректные данные в методы создания карточки, пользователя, обновления аватара пользователя или профиля' });
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
       } else {
         res.status(ERROR_DEFAULT).send({ message: 'Произошла ошибка' });
       }
