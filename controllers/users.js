@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../utils/errors');
+const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../middlewares/errors');
 
 // eslint-disable-next-line arrow-body-style
 const getUsers = (req, res) => {

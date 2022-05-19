@@ -1,5 +1,5 @@
 const Cards = require('../models/card');
-const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../utils/errors');
+const { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../middlewares/errors');
 
 const getCards = (req, res) => Cards.find({})
   .then((cards) => res.status(200).send(cards))

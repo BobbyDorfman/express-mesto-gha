@@ -4,9 +4,19 @@ const mongoose = require('mongoose');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 const routes = require('./routes');
+const { createUser, login } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 const app = express();
 app.use(bodyParser.json());
+
+// роуты, не требующие авторизации,
+// например, регистрация и логин
+app.post('/signup', createUser);
+app.post('/signin', login);
+
+// авторизация
+app.use(auth);
 
 app.use((req, res, next) => {
   req.user = {
