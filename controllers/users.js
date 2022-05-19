@@ -55,6 +55,21 @@ const createUser = (req, res) => {
     });
 };
 
+const getUserMe = (req, res) => User.findById(req.user._id)
+  .orFail(() => {
+    throw new Error('NotFound');
+  })
+  .then((user) => res.status(200).send({ data: user }))
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные' });
+    } else if (err.message === 'NotFound') {
+      res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден' });
+    } else {
+      res.status(ERROR_DEFAULT).send({ message: 'Произошла ошибка' });
+    }
+  });
+
 const updateUser = (req, res) => {
   const { name = req.params.name, about = req.params.about } = req.body;
 
@@ -111,6 +126,7 @@ module.exports = {
   getUsers,
   getUser,
   createUser,
+  getUserMe,
   updateUser,
   updateAvatar,
   login,
