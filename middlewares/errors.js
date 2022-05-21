@@ -1,5 +1,14 @@
-const ERROR_CODE = 400;
-const ERROR_NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+module.exports = ((err, req, res, next) => {
+  // если у ошибки нет статуса, выставляем 500
+  const { statusCode = 500, message } = err;
 
-module.exports = { ERROR_CODE, ERROR_NOT_FOUND, ERROR_DEFAULT };
+  res
+    .status(statusCode)
+    .send({
+      // проверяем статус и выставляем сообщение в зависимости от него
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+  next();
+});
