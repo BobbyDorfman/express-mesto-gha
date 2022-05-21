@@ -10,8 +10,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 
-// роуты, не требующие авторизации,
-// регистрация и логин
+// роуты, не требующие авторизации - регистрация и логин
 app.post('/signup', createUser);
 app.post('/signin', login);
 
