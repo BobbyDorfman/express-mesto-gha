@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { SECRET_CODE } = require('../controllers/users');
 
 module.exports.auth = (req, res, next) => {
   const { authorization } = req.headers;
@@ -13,7 +14,8 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, SECRET_CODE);
+    // payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     return res
       .status(401)
