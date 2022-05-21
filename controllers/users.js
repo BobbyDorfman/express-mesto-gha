@@ -108,7 +108,7 @@ const updateAvatar = (req, res) => {
     });
 };
 
-const { SECRET_CODE = '$2a$10$CkMBWD/MuJ5GyIbzDS1v/.iO2muX9PWBbvvqyOvR0a6MJzmg6lP32' } = process.env;
+const { JWT_SECRET = 'some-secret-key' } = process.env;
 
 const login = (req, res) => {
   const { email, password } = req.body;
@@ -116,7 +116,7 @@ const login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      const token = jwt.sign({ _id: user._id }, SECRET_CODE, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       // const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       // вернём токен
       res.send({ token });
@@ -134,5 +134,5 @@ module.exports = {
   updateUser,
   updateAvatar,
   login,
-  SECRET_CODE,
+  JWT_SECRET,
 };

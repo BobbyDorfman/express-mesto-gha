@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { SECRET_CODE } = require('../controllers/users');
+const { JWT_SECRET } = require('../controllers/users');
 
 module.exports.auth = (req, res, next) => {
   const { authorization } = req.headers;
@@ -14,7 +14,7 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, SECRET_CODE);
+    payload = jwt.verify(token, JWT_SECRET);
     // payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     return res
