@@ -6,9 +6,6 @@ const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConcflictError');
 const AuthError = require('../errors/ConcflictError');
 
-// const { JWT_SECRET = 'some-secret-key' } = process.env;
-const { NODE_ENV, JWT_SECRET } = process.env;
-
 const getUsers = (req, res, next) => {
   const { userList } = {};
   return User.find(userList)
@@ -112,11 +109,8 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      // const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      // const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
-        expiresIn: '7d',
-      });
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+
       // вернём токен
       res.send({ token });
     }) // аутентификация успешна! пользователь в переменной user
@@ -136,3 +130,12 @@ module.exports = {
   login,
   // JWT_SECRET,
 };
+
+// const { JWT_SECRET = 'some-secret-key' } = process.env;
+// const { NODE_ENV, JWT_SECRET } = process.env;
+
+// eslint-disable-next-line max-len
+/* const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
+  expiresIn: '7d',
+}); */
+// const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
