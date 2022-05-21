@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConcflictError');
+const AuthError = require('../errors/ConcflictError');
 
 const { JWT_SECRET = 'some-secret-key' } = process.env;
 
@@ -115,7 +116,10 @@ const login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     }) // аутентификация успешна! пользователь в переменной user
-    .catch(next);
+    // .catch(next);
+    .catch(() => {
+      next(new AuthError('В доступе отказано'));
+    });
 };
 
 module.exports = {
