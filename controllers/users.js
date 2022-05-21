@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConcflictError');
-const AuthError = require('../errors/ConcflictError');
+// const AuthError = require('../errors/ConcflictError');
 
 const getUsers = (req, res, next) => {
   const { userList } = {};
@@ -114,10 +114,7 @@ const login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     }) // аутентификация успешна! пользователь в переменной user
-    // .catch(next);
-    .catch(() => {
-      next(new AuthError('В доступе отказано'));
-    });
+    .catch(next);
 };
 
 module.exports = {
@@ -139,3 +136,7 @@ module.exports = {
   expiresIn: '7d',
 }); */
 // const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+
+/* .catch(() => {
+  next(new AuthError('В доступе отказано'));
+}); */
