@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const isUrl = require('validator/lib/isURL');
 const isEmail = require('validator/lib/isEmail');
+const AuthError = require('../errors/AuthError');
 
 const userSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:
@@ -18,6 +20,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String, // аватар — это строка
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (url) => isUrl(url),
+      message: 'Неправильная ссылка',
+    },
   },
   email: {
     type: String,
@@ -40,13 +46,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new AuthError('Неправильные почта или пароль');
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            throw new AuthError('Неправильные почта или пароль');
           }
 
           return user; // теперь user доступен
