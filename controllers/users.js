@@ -56,7 +56,7 @@ const createUser = (req, res, next) => {
     .catch(next);
 };
 
-const getUserMe = (req, res, next) => User.findById(req.user._id)
+/* const getUserMe = (req, res, next) => User.findById(req.user._id)
   .orFail(() => {
     throw new NotFoundError('Пользователь по указанному _id не найден');
   })
@@ -68,7 +68,13 @@ const getUserMe = (req, res, next) => User.findById(req.user._id)
       throw new NotFoundError('Пользователь по указанному _id не найден');
     }
   })
-  .catch(next);
+  .catch(next); */
+
+const getUserMe = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => res.send(user))
+    .catch(next);
+};
 
 const updateUser = (req, res, next) => {
   const { name = req.params.name, about = req.params.about } = req.body;
