@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
 const routes = require('./routes');
 const { createUser, login } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 
+// Слушаем 3000 порт
+const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 
@@ -17,14 +17,6 @@ app.post('/signin', login);
 
 // авторизация
 app.use(auth);
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '627fa6fd6dbdf6ea50202db3',
-  };
-
-  next();
-});
 
 app.use(routes);
 
@@ -38,5 +30,3 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
-
-// 627d5bf85bd40126340521bc

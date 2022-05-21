@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-unresolved
 const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
 

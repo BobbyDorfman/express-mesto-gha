@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -29,7 +28,7 @@ const getUser = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -49,10 +48,11 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Произошла ошибка' });
+      } else if (err.code === 11000) {
+        res.status(409).send({ message: 'Пользователь с таким email уже существует' });
       }
-    });
+    })
+    .catch(next);
 };
 
 const getUserMe = (req, res) => User.findById(req.user._id)
