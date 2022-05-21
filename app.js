@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // роуты, не требующие авторизации,
-// например, регистрация и логин
+// регистрация и логин
 app.post('/signup', createUser);
 app.post('/signin', login);
 

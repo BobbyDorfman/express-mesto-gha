@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../controllers/users');
+// const { JWT_SECRET } = require('../controllers/users');
 const AuthError = require('../errors/AuthError');
 
 module.exports.auth = (req, res, next) => {
@@ -13,8 +13,8 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
-    // payload = jwt.verify(token, 'some-secret-key');
+    // payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
