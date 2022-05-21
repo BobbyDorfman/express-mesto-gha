@@ -7,8 +7,7 @@ const ConflictError = require('../errors/ConcflictError');
 // const AuthError = require('../errors/ConcflictError');
 
 const getUsers = (req, res, next) => {
-  const { userList } = {};
-  return User.find(userList)
+  User.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch(next);
 };
