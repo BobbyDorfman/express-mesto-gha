@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const routes = require('./routes');
+const { errors } = require('celebrate');
 const { createUser, login } = require('./controllers/users');
+const { authorizationValidation, registrationValidation } = require('./middlewares/validation');
 const { auth } = require('./middlewares/auth');
+const routes = require('./routes');
+const serverError = require('./middlewares/errors');
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -11,13 +14,16 @@ const app = express();
 app.use(bodyParser.json());
 
 // роуты, не требующие авторизации - регистрация и логин
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', registrationValidation, createUser);
+app.post('/signin', authorizationValidation, login);
 
 // авторизация
 app.use(auth);
 
 app.use(routes);
+
+app.use(errors());
+app.use(serverError);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', () => {
   // eslint-disable-next-line no-console
