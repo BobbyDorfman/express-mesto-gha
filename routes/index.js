@@ -6,9 +6,9 @@ const NotFoundError = require('../errors/NotFoundError');
 
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
-router.get('/', (req, res) => {
+/* router.get('/', (req, res) => {
   res.send('Ответ на сигнал из далёкого космоса');
-});
+}); */
 router.use((req, res, next) => {
   next(new NotFoundError('Ресурс не найден'));
 });

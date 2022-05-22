@@ -21,12 +21,13 @@ const getUser = (req, res, next) => {
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new ValidationError('Переданы некорректные данные');
-      } else if (err.name === 'NotFoundError') {
-        throw new NotFoundError('Пользователь по указанному _id не найден');
+        next(new ValidationError('Переданы некорректные данные'));
+      } if (err.name === 'NotFoundError') {
+        next(new NotFoundError('Пользователь по указанному _id не найден'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -45,15 +46,23 @@ const createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send({
+      data: {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при создании пользователя');
-      } else if (err.code === 11000) {
-        throw new ConflictError('Пользователь с таким email уже существует');
+        next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+      } if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 const getUserMe = (req, res, next) => User.findById(req.user._id)
@@ -63,12 +72,13 @@ const getUserMe = (req, res, next) => User.findById(req.user._id)
   .then((user) => res.status(200).send({ data: user }))
   .catch((err) => {
     if (err.name === 'CastError') {
-      throw new ValidationError('Переданы некорректные данные');
-    } else if (err.name === 'NotFoundError') {
-      throw new NotFoundError('Пользователь по указанному _id не найден');
+      next(new ValidationError('Переданы некорректные данные'));
+    } if (err.name === 'NotFoundError') {
+      next(new NotFoundError('Пользователь по указанному _id не найден'));
+    } else {
+      next(err);
     }
-  })
-  .catch(next);
+  });
 
 const updateUser = (req, res, next) => {
   const { name = req.params.name, about = req.params.about } = req.body;
@@ -80,10 +90,11 @@ const updateUser = (req, res, next) => {
     .then((user) => res.status(200).send({ name: user.name, about: user.about }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new ValidationError('Переданы некорректные данные при обновлении профиля');
+        next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 const updateAvatar = (req, res, next) => {
@@ -96,10 +107,11 @@ const updateAvatar = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new ValidationError('Переданы некорректные данные при обновлении аватара');
+        next(new ValidationError('Переданы некорректные данные при обновлении аватара'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 const login = (req, res, next) => {
