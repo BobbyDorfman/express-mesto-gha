@@ -7,6 +7,7 @@ const { authorizationValidation, registrationValidation } = require('./middlewar
 const { auth } = require('./middlewares/auth');
 const routes = require('./routes');
 const serverError = require('./middlewares/errors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -20,7 +21,11 @@ app.post('/signin', authorizationValidation, login);
 // авторизация
 app.use(auth);
 
+app.use(requestLogger); // подключаем логгер запросов
+
 app.use(routes);
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors());
 app.use(serverError);
