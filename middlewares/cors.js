@@ -1,8 +1,10 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://praktikum.tk',
-  // 'http://praktikum.tk',
-  // 'localhost:3000',
+  'http://localhost:3000',
+  'http://bobbydorfman.nomoreparties.sbs',
+  'https://bobbydorfman.nomoreparties.sbs',
+  'http://api.bobbydorfman.nomoredomains.xyz',
+  'https://api.bobbydorfman.nomoredomains.xyz',
 ];
 
 const cors = (req, res, next) => {

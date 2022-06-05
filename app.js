@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('./middlewares/cors');
 const { createUser, login } = require('./controllers/users');
 const { authorizationValidation, registrationValidation } = require('./middlewares/validation');
 const { auth } = require('./middlewares/auth');
@@ -13,6 +14,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
+
+app.use(cors);
 
 // роуты, не требующие авторизации - регистрация и логин
 app.post('/signup', registrationValidation, createUser);
